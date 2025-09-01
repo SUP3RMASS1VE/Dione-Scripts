@@ -1,0 +1,39 @@
+{
+  "requirements": {
+    "gpus": ["nvidia"],
+    "os": ["windows"]
+  },
+  "dependencies": {
+    "git": { "version": "latest" },
+    "uv": { "version": "latest" },
+    "ffmpeg": { "version": "latest" }
+  },
+  "installation": [
+    {
+      "name": "Cloning VibeVoiceTTS repository",
+      "commands": [
+        "git clone https://github.com/SUP3RMASS1VE/VibeVoiceTTS.git VibeVoiceTTS"
+        ]
+    },
+    {
+      "name": "Installing requirements",
+      "env": { "name": "VibeVoiceTTS/.venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd VibeVoiceTTS",
+        "uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128",
+        "uv pip install -e ."
+      ]
+    }
+  ],
+  "start": [
+    {
+      "name": "Starting VibeVoiceTTS",
+      "catch": "7860",
+      "env": "VibeVoiceTTS/.venv",
+      "commands": [
+        "cd VibeVoiceTTS",
+        "uv run python demo/gradio_demo.py"
+      ]
+    }
+  ]
+}
