@@ -1,0 +1,55 @@
+{
+  "requirements": {
+    "gpus": ["nvidia", "amd"],
+    "os": ["windows", "linux"]
+  },
+  "dependencies": {
+    "git": { "version": "latest" },
+    "uv": { "version": "latest" }
+  },
+  "installation": [
+    {
+      "name": "Cloning VoxCPM-Text-to-Speech repository",
+      "commands": [
+        "git clone https://github.com/SUP3RMASS1VE/VoxCPM-Text-to-Speech.git VoxCPM-Text-to-Speech"
+      ]
+    },
+    {
+      "name": "Installing PyTorch with CUDA support",
+      "env": { "name": "voxcpm-env", "version": "3.10", "type": "uv" },
+      "commands": [
+        {
+          "platform": "windows",
+          "command": "cd VoxCPM-Text-to-Speech && uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128 && uv pip install triton-windows==3.3.1.post19"
+        },
+        {
+          "platform": "linux",
+          "command": "cd VoxCPM-Text-to-Speech && uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio==2.7.1 --index-url https://download.pytorch.org/whl/cu128 && uv pip install triton"
+        }
+      ]
+    },
+    {
+      "name": "Installing additional requirements",
+      "env": { "name": "voxcpm-env", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd VoxCPM-Text-to-Speech",
+        "uv pip install -r requirements.txt"
+      ]
+    }
+  ],
+  "start": [
+    {
+      "name": "Starting VoxCPM Text-to-Speech",
+      "catch": "7860",
+      "env": "voxcpm-env",
+      "env_vars": {
+        "TORCH_COMPILE_DISABLE": "true",
+        "PYTORCH_DISABLE_COMPILE_WARNINGS": "true"
+      },
+      "commands": [
+        "cd VoxCPM-Text-to-Speech",
+        "python app.py"
+      ]
+    }
+  ]
+}
