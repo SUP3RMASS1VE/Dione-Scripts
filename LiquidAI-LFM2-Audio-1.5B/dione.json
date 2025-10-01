@@ -1,0 +1,83 @@
+{
+  "requirements": {
+    "gpus": ["nvidia", "amd"],
+    "os": ["windows", "linux"]
+  },
+  "dependencies": {
+    "git": { "version": "latest" },
+    "uv": { "version": "latest" }
+  },
+  "installation": [
+    {
+      "name": "Cloning LiquidAI Audio repository",
+      "commands": [
+        "git clone https://github.com/Liquid4All/liquid-audio.git LiquidAI-LFM2-Audio-1.5B"
+      ]
+    },
+    {
+      "name": "Installing base requirements",
+      "env": { "name": "liquid-env", "version": "3.12", "type": "uv" },
+      "commands": [
+        "cd LiquidAI-LFM2-Audio-1.5B",
+        "uv pip install pip",
+        "uv pip install -e .",
+        "uv pip install gradio devicetorch",
+        "uv pip install \"fastrtc[vad]\"",
+        "uv pip install hf_xet"
+      ]
+    },
+    {
+      "name": "Installing PyTorch with CUDA support (NVIDIA)",
+      "env": { "name": "liquid-env", "version": "3.12", "type": "uv" },
+      "commands": [
+        {
+          "platform": "windows",
+          "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128"
+        },
+        {
+          "platform": "linux", 
+          "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128"
+        }
+      ]
+    },
+    {
+      "name": "Installing Flash Attention (NVIDIA)",
+      "env": { "name": "liquid-env", "version": "3.12", "type": "uv" },
+      "commands": [
+        {
+          "platform": "windows",
+          "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install https://huggingface.co/lldacing/flash-attention-windows-wheel/resolve/main/flash_attn-2.7.4.post1%2Bcu128torch2.7.0cxx11abiFALSE-cp312-cp312-win_amd64.whl"
+        },
+        {
+          "platform": "linux",
+          "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.7cxx11abiTRUE-cp312-cp312-linux_x86_64.whl"
+        }
+      ]
+    },
+    {
+      "name": "Installing Triton (NVIDIA)",
+      "env": { "name": "liquid-env", "version": "3.12", "type": "uv" },
+      "commands": [
+        {
+          "platform": "windows",
+          "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install triton-windows==3.3.1.post19"
+        },
+        {
+          "platform": "linux",
+          "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install triton"
+        }
+      ]
+    }
+  ],
+  "start": [
+    {
+      "name": "Starting LiquidAI Audio Demo",
+      "catch": "http://",
+      "env": "liquid-env",
+      "commands": [
+        "cd LiquidAI-LFM2-Audio-1.5B",
+        "liquid-audio-demo"
+      ]
+    }
+  ]
+}
