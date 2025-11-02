@@ -38,7 +38,7 @@
   "start": [
     {
       "name": "Starting FlashVSR+ WebUI",
-      "catch": "http://",
+      "catch": "7860",
       "env": "env",
       "commands": [
         "cd FlashVSR_plus",
@@ -46,4 +46,5 @@
       ]
     }
   ]
+
 }
