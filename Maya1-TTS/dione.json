@@ -1,0 +1,46 @@
+{
+  "requirements": {
+    "gpus": ["nvidia"],
+    "os": ["windows","linux"]
+  },
+  "dependencies": {
+    "git": { "version": "latest" },
+    "uv": { "version": "latest" }
+  },
+  "installation": [
+    {
+      "name": "Cloning Maya1-TTS repository",
+      "commands": [
+        "git clone https://github.com/SUP3RMASS1VE/Maya1-TTS app"
+      ]
+    },
+    {
+      "name": "Installing PyTorch with CUDA support",
+      "env": { "name": "venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd app",
+        "uv pip install pip",
+        "uv pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu128"
+      ]
+    },
+    {
+      "name": "Installing requirements",
+      "env": { "name": "venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd app",
+        "uv pip install -r requirements.txt"
+      ]
+    }
+  ],
+  "start": [
+    {
+      "name": "Starting Maya1-TTS",
+      "catch": "7860",
+      "env": "venv",
+      "commands": [
+        "cd app",
+        "python app.py"
+      ]
+    }
+  ]
+}
