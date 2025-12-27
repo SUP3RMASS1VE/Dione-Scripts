@@ -1,0 +1,116 @@
+{
+  "requirements": {
+    "os": ["windows", "linux"],
+    "gpus": ["nvidia"]
+  },
+  "dependencies": {
+    "git": { "version": "latest" },
+    "uv": { "version": "latest" }
+  },
+  "installation": [
+    {
+      "name": "Cloning Z-Fusion repository",
+      "commands": [
+        "git clone --depth 1 https://github.com/ai-anchorite/Z-Fusion.git Z-Fusion"
+      ]
+    },
+    {
+      "name": "Removing unnecessary files",
+      "commands": [
+        { "platform": "windows", "command": "del Z-Fusion\\*.js Z-Fusion\\*.json Z-Fusion\\*.md Z-Fusion\\LICENSE Z-Fusion\\.gitignore Z-Fusion\\icon.png" },
+        { "platform": "linux", "command": "rm -f Z-Fusion/*.js Z-Fusion/*.json Z-Fusion/*.md Z-Fusion/LICENSE Z-Fusion/.gitignore Z-Fusion/icon.png" }
+      ]
+    },
+    {
+      "name": "Cloning ComfyUI backend",
+      "commands": [
+        "git clone https://github.com/comfyanonymous/ComfyUI Z-Fusion/app/comfyui"
+      ]
+    },
+    {
+      "name": "Cloning ComfyUI custom nodes",
+      "commands": [
+        "git clone https://github.com/ltdrdata/ComfyUI-Manager Z-Fusion/app/comfyui/custom_nodes/ComfyUI-Manager",
+        "git clone https://github.com/city96/ComfyUI-GGUF Z-Fusion/app/comfyui/custom_nodes/ComfyUI-GGUF",
+        "git clone https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler Z-Fusion/app/comfyui/custom_nodes/ComfyUI-SeedVR2_VideoUpscaler",
+        "git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite Z-Fusion/app/comfyui/custom_nodes/ComfyUI-VideoHelperSuite",
+        "git clone https://github.com/ChangeTheConstants/SeedVarianceEnhancer Z-Fusion/app/comfyui/custom_nodes/SeedVarianceEnhancer",
+        "git clone https://github.com/demon4932/CameraPromptsGenerator Z-Fusion/app/CameraPromptsGenerator"
+      ]
+    },
+    {
+      "name": "Creating virtual environment and installing PyTorch",
+      "env": { "name": "env", "version": "3.10" },
+      "commands": [
+        "cd Z-Fusion/app",
+        { "platform": "windows", "gpu": "nvidia", "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128" },
+        { "platform": "windows", "gpu": "nvidia", "command": "uv pip install triton-windows==3.3.1.post19" },
+        { "platform": "windows", "gpu": "nvidia", "command": "uv pip install https://github.com/woct0rdho/SageAttention/releases/download/v2.1.1-windows/sageattention-2.1.1+cu128torch2.7.0-cp310-cp310-win_amd64.whl" },
+        { "platform": "windows", "gpu": "nvidia", "command": "uv pip install https://huggingface.co/lldacing/flash-attention-windows-wheel/resolve/main/flash_attn-2.7.4.post1+cu128torch2.8.0cxx11abiTRUE-cp310-cp310-win_amd64.whl" },
+        { "platform": "linux", "gpu": "nvidia", "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128" },
+        { "platform": "linux", "gpu": "nvidia", "command": "uv pip install triton" },
+        { "platform": "linux", "gpu": "nvidia", "command": "uv pip install https://huggingface.co/MonsterMMORPG/SECourses_Premium_Flash_Attention/resolve/main/sageattention-2.1.1-cp310-cp310-linux_x86_64.whl" },
+        { "platform": "linux", "gpu": "nvidia", "command": "uv pip install https://github.com/kingbri1/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu128torch2.7.0cxx11abiFALSE-cp310-cp310-linux_x86_64.whl" }
+      ]
+    },
+    {
+      "name": "Installing ComfyUI requirements",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "uv pip install -r comfyui/requirements.txt"
+      ]
+    },
+    {
+      "name": "Installing ComfyUI-GGUF requirements",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "uv pip install gguf>=0.13.0 sentencepiece protobuf"
+      ]
+    },
+    {
+      "name": "Installing ComfyUI-SeedVR2 requirements",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "uv pip install einops omegaconf>=2.3.0 diffusers>=0.33.1 peft>=0.17.0 rotary_embedding_torch>=0.5.3 opencv-python matplotlib"
+      ]
+    },
+    {
+      "name": "Installing ComfyUI-VideoHelperSuite requirements",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "uv pip install opencv-python imageio-ffmpeg"
+      ]
+    },
+    {
+      "name": "Installing Gradio app requirements",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "uv pip install -r requirements.txt"
+      ]
+    },
+    {
+      "name": "Creating launcher script",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "python -c \"f=open('launch.py','w');f.write('import subprocess\\nimport sys\\nimport time\\nimport os\\n\\nDEVNULL = open(os.devnull, \\\"w\\\")\\ncomfyui_process = subprocess.Popen([sys.executable, \\\"comfyui/main.py\\\", \\\"--use-sage-attention\\\"], cwd=os.path.dirname(os.path.abspath(__file__)), stdout=DEVNULL, stderr=DEVNULL)\\nprint(\\\"Starting ComfyUI backend silently...\\\")\\ntime.sleep(45)\\nprint(\\\"Starting Z-Fusion Gradio UI...\\\")\\nsubprocess.run([sys.executable, \\\"app.py\\\"], cwd=os.path.dirname(os.path.abspath(__file__)))\\n');f.close()\""
+      ]
+    }
+  ],
+  "start": [
+    {
+      "name": "Starting Z-Fusion",
+      "catch": "7860",
+      "env": "env",
+      "commands": [
+        "cd Z-Fusion/app",
+        "python launch.py"
+      ]
+    }
+  ]
+}
