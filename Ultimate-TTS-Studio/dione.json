@@ -1,10 +1,13 @@
 {
     "requirements": {
-      "os": ["windows"],
+      "os": ["windows", "linux"],
       "gpus": ["nvidia"]
     },
   "dependencies": {
     "git": {
+      "version": "latest"
+    },
+    "uv": {
       "version": "latest"
     }
   },
@@ -19,7 +22,8 @@
       "name": "Installing espeak-ng",
       "commands": [
         "cd Ultimate-TTS-Studio-SUP3R-Edition",
-        { "platform": "windows", "command": "powershell -Command \"$job = Start-Job -ScriptBlock { winget install --id=eSpeak-NG.eSpeak-NG -e --silent --accept-source-agreements --accept-package-agreements --force --disable-interactivity }; Wait-Job $job -Timeout 60; Remove-Job $job -Force; Write-Host 'espeak-ng installation completed'\"" }
+        { "platform": "windows", "command": "powershell -Command \"$job = Start-Job -ScriptBlock { winget install --id=eSpeak-NG.eSpeak-NG -e --silent --accept-source-agreements --accept-package-agreements --force --disable-interactivity }; Wait-Job $job -Timeout 60; Remove-Job $job -Force; Write-Host 'espeak-ng installation completed'\"" },
+        { "platform": "linux", "command": "sudo apt-get install -y espeak-ng" }
       ]
     },
     {
@@ -32,12 +36,19 @@
       "commands": [
         "cd Ultimate-TTS-Studio-SUP3R-Edition",
         "conda install -c conda-forge pynini==2.1.6 -y",
-        "uv pip install triton-windows==3.3.1.post19",
+        "conda install -y -c conda-forge portaudio",
         "uv pip install -r requirements.txt",
+        "uv pip install --upgrade --force-reinstall --no-deps --no-cache-dir onnxruntime-gpu==1.22.0",
+        "pip install phonemizer-fork",
         "uv pip install WeTextProcessing --no-deps",
-        "uv pip install https://huggingface.co/lldacing/flash-attention-windows-wheel/resolve/main/flash_attn-2.7.4.post1%2Bcu128torch2.7.0cxx11abiFALSE-cp310-cp310-win_amd64.whl",
         "uv pip install voxcpm openai-whisper --no-deps",
-        "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128"
+        { "platform": "windows", "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128 --force-reinstall --no-deps" },
+        { "platform": "windows", "command": "uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.4.10/flash_attn-2.8.2+cu128torch2.7-cp310-cp310-win_amd64.whl" },
+        { "platform": "windows", "command": "uv pip install triton-windows==3.3.1.post19" },
+        { "platform": "linux", "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128 --force-reinstall" },
+        { "platform": "linux", "command": "uv pip install https://github.com/mjun0812/flash-attention-prebuild-wheels/releases/download/v0.4.11/flash_attn-2.8.3+cu128torch2.7-cp310-cp310-linux_x86_64.whl" },
+        { "platform": "linux", "command": "uv pip install triton" },
+        { "platform": "linux", "command": "uv pip install numpy==1.26.0" }
       ]
     },
     {
@@ -48,7 +59,7 @@
       },
       "commands": [
         "cd Ultimate-TTS-Studio-SUP3R-Edition",
-        "huggingface-cli download cocktailpeanut/oa --local-dir ./checkpoints/openaudio-s1-mini"
+        "hf download cocktailpeanut/oa --local-dir ./checkpoints/openaudio-s1-mini"
       ]
     }
   ],
@@ -66,4 +77,4 @@
       ]
     }
   ]
-} 
+}
