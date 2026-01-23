@@ -1,0 +1,83 @@
+{
+  "requirements": {
+    "gpus": ["nvidia"],
+    "os": ["windows", "linux"]
+  },
+  "dependencies": {
+    "git": { "version": "latest" },
+    "uv": { "version": "latest" }
+  },
+  "installation": [
+    {
+      "name": "Cloning Qwen3-TTS repository",
+      "commands": [
+        "git clone https://github.com/SUP3RMASS1VE/Qwen3-TTS.git Qwen3-TTS"
+      ]
+    },
+    {
+      "name": "Installing requirements",
+      "env": { "name": "venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd Qwen3-TTS",
+        "uv pip install pip",
+        "uv pip install -r requirements.txt"
+      ]
+    },
+    {
+      "name": "Installing PyTorch with CUDA support",
+      "env": { "name": "venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd Qwen3-TTS",
+        {
+          "platform": "windows",
+          "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128 --force-reinstall --no-deps"
+        },
+        {
+          "platform": "linux",
+          "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128 --force-reinstall"
+        }
+      ]
+    },
+    {
+      "name": "Installing triton",
+      "env": { "name": "venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd Qwen3-TTS",
+        {
+          "platform": "windows",
+          "command": "uv pip install triton-windows==3.3.1.post19"
+        },
+        {
+          "platform": "linux",
+          "command": "uv pip install triton"
+        }
+      ]
+    },
+    {
+      "name": "Installing Flash Attention",
+      "env": { "name": "venv", "version": "3.10", "type": "uv" },
+      "commands": [
+        "cd Qwen3-TTS",
+        {
+          "platform": "windows",
+          "command": "uv pip install https://huggingface.co/cocktailpeanut/wheels/resolve/main/flash_attn-2.8.2%2Bcu128torch2.7-cp310-cp310-win_amd64.whl"
+        },
+        {
+          "platform": "linux",
+          "command": "uv pip install https://huggingface.co/cocktailpeanut/wheels/resolve/main/flash_attn-2.8.3%2Bcu128torch2.7-cp310-cp310-linux_x86_64.whl"
+        }
+      ]
+    }
+  ],
+  "start": [
+    {
+      "name": "Starting Qwen3-TTS",
+      "catch": "7860",
+      "env": "venv",
+      "commands": [
+        "cd Qwen3-TTS",
+        "python app.py"
+      ]
+    }
+  ]
+}
