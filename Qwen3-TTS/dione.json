@@ -15,6 +15,19 @@
       ]
     },
     {
+      "name": "Installing SoX audio processor",
+      "commands": [
+        {
+          "platform": "windows",
+          "command": "powershell -Command \"winget install --id=ChrisBagwell.SoX -e --silent --accept-source-agreements --accept-package-agreements --force --disable-interactivity\""
+        },
+        {
+          "platform": "linux",
+          "command": "sudo apt-get install -y sox libsox-fmt-all"
+        }
+      ]
+    },
+    {
       "name": "Installing requirements",
       "env": { "name": "venv", "version": "3.10", "type": "uv" },
       "commands": [
@@ -81,3 +94,4 @@
     }
   ]
 }
+
