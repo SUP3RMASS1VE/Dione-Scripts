@@ -1,7 +1,7 @@
 {
   "requirements": {
-    "gpus": ["nvidia"],
-    "os": ["windows", "linux"]
+    "gpus": ["nvidia", "apple"],
+    "os": ["windows", "linux", "darwin"]
   },
   "dependencies": {
     "git": { "version": "latest" },
@@ -24,6 +24,10 @@
         {
           "platform": "linux",
           "command": "sudo apt-get install -y sox libsox-fmt-all"
+        },
+        {
+          "platform": "darwin",
+          "command": "brew install sox"
         }
       ]
     },
@@ -48,6 +52,10 @@
         {
           "platform": "linux",
           "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --index-url https://download.pytorch.org/whl/cu128 --force-reinstall"
+        },
+        {
+          "platform": "darwin",
+          "command": "uv pip install torch==2.7.0 torchvision==0.22.0 torchaudio==2.7.0 --force-reinstall --no-deps"
         }
       ]
     },
@@ -63,6 +71,10 @@
         {
           "platform": "linux",
           "command": "uv pip install triton"
+        },
+        {
+          "platform": "darwin",
+          "command": "echo Skipping triton on macOS - not required for MPS"
         }
       ]
     },
@@ -78,6 +90,10 @@
         {
           "platform": "linux",
           "command": "uv pip install https://huggingface.co/cocktailpeanut/wheels/resolve/main/flash_attn-2.8.3%2Bcu128torch2.7-cp310-cp310-linux_x86_64.whl"
+        },
+        {
+          "platform": "darwin",
+          "command": "echo Skipping Flash Attention on macOS - not supported on MPS"
         }
       ]
     }
@@ -89,9 +105,19 @@
       "env": "venv",
       "commands": [
         "cd Qwen3-TTS",
-        "python app.py"
+        {
+          "platform": "darwin",
+          "command": "python app_mac.py"
+        },
+        {
+          "platform": "windows",
+          "command": "python app.py"
+        },
+        {
+          "platform": "linux",
+          "command": "python app.py"
+        }
       ]
     }
   ]
 }
-
