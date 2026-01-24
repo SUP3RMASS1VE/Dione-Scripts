@@ -29,7 +29,8 @@
           "platform": "darwin",
           "command": "brew install sox"
         }
-      ]
+      ],
+      "variables": [{ "key": "PATH", "value": "C:\\Program Files (x86)\\sox-14-4-2" }]
     },
     {
       "name": "Installing requirements",
