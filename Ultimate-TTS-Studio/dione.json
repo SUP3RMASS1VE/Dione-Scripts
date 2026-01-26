@@ -27,6 +27,19 @@
       ]
     },
     {
+      "name": "Installing SoX audio processor",
+      "variables": [
+        {
+          "key": "PATH",
+          "value": "C:\\Program Files (x86)\\sox-14-4-2"
+        }
+      ],
+      "commands": [
+        { "platform": "windows", "command": "powershell -Command \"winget install --id=ChrisBagwell.SoX -e --silent --accept-source-agreements --accept-package-agreements --force --disable-interactivity\"" },
+        { "platform": "linux", "command": "sudo apt-get install -y sox libsox-fmt-all" }
+      ]
+    },
+    {
       "name": "Creating conda environment",
       "env": {
         "name": "ultimate-tts",
