@@ -67,6 +67,15 @@
           "command": "cd LiquidAI-LFM2-Audio-1.5B && uv pip install triton"
         }
       ]
+    },
+    {
+      "name": "Creating Windows launcher script",
+      "commands": [
+        {
+          "platform": "windows",
+          "command": "python -c \"import base64;open('win_launch.py','wb').write(base64.b64decode('aW1wb3J0IG9zLCBzeXMsIHRlbXBmaWxlLCBnZXRwYXNzCl9vcmlnID0gZ2V0cGFzcy5nZXR1c2VyCmRlZiBfcGF0Y2hlZCgpOgogICAgdHJ5OgogICAgICAgIHJldHVybiBfb3JpZygpCiAgICBleGNlcHQgKEltcG9ydEVycm9yLCBLZXlFcnJvcik6CiAgICAgICAgcmV0dXJuIG9zLmVudmlyb24uZ2V0KCJVU0VSTkFNRSIsICJ1c2VyIikKZ2V0cGFzcy5nZXR1c2VyID0gX3BhdGNoZWQKZCA9IG9zLnBhdGguam9pbih0ZW1wZmlsZS5nZXR0ZW1wZGlyKCksICJ0b3JjaGluZHVjdG9yIikKb3MubWFrZWRpcnMoZCwgZXhpc3Rfb2s9VHJ1ZSkKb3MuZW52aXJvblsiVE9SQ0hJTkRVQ1RPUl9DQUNIRV9ESVIiXSA9IGQKb3MuZW52aXJvblsiTk9fVE9SQ0hfQ09NUElMRSJdID0gIjEiCm9zLmVudmlyb25bIk5PX0NVREFfR1JBUEgiXSA9ICIxIgpvcy5lbnZpcm9uWyJUT1JDSERZTkFNT19ESVNBQkxFIl0gPSAiMSIKZnJvbSBsaXF1aWRfYXVkaW8uZGVtby5jaGF0IGltcG9ydCBtYWluCm1haW4oKQo='))\""
+        }
+      ]
     }
   ],
   "start": [
@@ -76,7 +85,14 @@
       "env": "liquid-env",
       "commands": [
         "cd LiquidAI-LFM2-Audio-1.5B",
-        "liquid-audio-demo"
+        {
+          "platform": "windows",
+          "command": "python ..\\win_launch.py"
+        },
+        {
+          "platform": "linux",
+          "command": "liquid-audio-demo"
+        }
       ]
     }
   ]
